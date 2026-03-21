@@ -22,30 +22,6 @@ model = nn.Sequential(
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adamax(model.parameters(),lr = 0.001)
 # Train the model
-import numpy as np
-import matplotlib.pyplot as plt
-import torch 
-import torch.nn as nn
-import torch.optim as optim
-from torchvision import datasets, transforms 
-from sklearn.metrics import confusion_matrix
-# Load MNIST dataset
-transform = transforms.ToTensor()
-train_data= datasets.MNIST(root="./data", train = True, transform = transform, download = True)
-test_data = datasets.MNIST(root="./data", train = False, transform = transform, download = True)
-# Create data loaders
-train_load= torch.utils.data.DataLoader(train_data, batch_size = 69, shuffle = True)
-test_load =torch.utils.data.DataLoader(test_data, batch_size = 69, shuffle = False )
-# Define the model
-model = nn.Sequential(
-    nn.Flatten(),
-    nn.Linear(28*28,128), 
-    nn.ReLU(),
-    nn.Linear(128,10)
-)
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adamax(model.parameters(),lr = 0.001)
-# Train the model
 accuracy_list = []
 loss_list = []
 
@@ -77,6 +53,7 @@ for epoch in range(epochs):
     loss_list.append(total_loss)
 
     print(f"Epoch {epoch+1}/{epochs}, Loss: {total_loss:.2f}, Accuracy: {acc:.2f}%")
+    
 # Accuracy graph
 plt.figure()
 plt.plot(range(1, epochs+1), accuracy_list)
@@ -92,3 +69,9 @@ plt.xlabel("Epoch")
 plt.ylabel("Loss")
 plt.title("Loss vs Epoch")
 plt.show()
+for i in range(len(images)):
+    if predicted[i] != labels[i]:
+        plt.imshow(images[i].squeeze(), cmap='gray')
+        plt.title(f"Wrong: P={predicted[i].item()}, A={labels[i].item()}", color="red")
+        plt.show()
+        break
